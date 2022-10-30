@@ -1,6 +1,7 @@
 import * as React from "react";
 import "./listing.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -22,7 +23,18 @@ const rows = [
   createData("Soap5", "Service 5", "Oper 5", "Param 5", "Type 5"),
 ];
 
+const baseURL = "https://localhost:44386/api/nikita_Connection_Service";
 export default function Lisiting() {
+  const navigate = useNavigate();
+  const [post, setPost] = React.useState(null);
+
+  React.useEffect(() => {
+    axios.get(baseURL).then((response) => {
+      setPost(response.data);
+    });
+  }, []);
+
+  if (!post) return null;
   return (
     <>
       <div>
@@ -44,18 +56,28 @@ export default function Lisiting() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {post.map((row) => (
                   <TableRow
-                    key={row.name}
+                    onClick={() => navigate(`/editService?${row?.id}`)}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell component="th" scope="row">
-                      {row.name}
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      key={row.service_name}
+                    >
+                      {row.protocol_type_id === 1 ? "Soap" : "Rest"}
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell align="right">{row.service_name}</TableCell>
+                    <TableCell align="right">{row.operation_name}</TableCell>
+                    <TableCell align="right">{row.parameter_name}</TableCell>
+                    <TableCell align="right">
+                      {row.parameter_type_id === 1
+                        ? "int"
+                        : row.parameter_type_id === 2
+                        ? "String"
+                        : "Boolean"}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

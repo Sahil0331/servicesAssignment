@@ -1,21 +1,69 @@
 import "../../App.css";
+import React, { useEffect } from "react";
 import { InputLabel } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
 
-function EditService() {
+const baseURL = "https://localhost:44386/api/nikita_Connection_Service";
+
+const EditService = () => {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
+  const query = window.location.href.split("?")[1];
+
+  const [post, setPost] = React.useState(null);
+  const [service, setService] = React.useState(null);
+
+  React.useEffect(() => {
+    axios.get(baseURL).then((response) => {
+      setPost(response.data);
+    });
+  }, []);
+
+  const navigate = useNavigate();
+
+  const serviceFinder = () => {
+    const arr = post?.filter((item) => item.id == query);
+    setService(arr?.[0]);
+  };
+
+  useEffect(() => {
+    serviceFinder();
+  }, [post]);
+
+  const deleteService = () => {
+    axios
+      .delete(`https://localhost:44386/api/nikita_Connection_Service/${query}`)
+      .then((res) => {
+        if (res.status == 200) {
+          DeleteAlert();
+          setTimeout(() => navigate("/"), 1500);
+        }
+      })
+      .catch((err) => console.log(err, "error here"));
+  };
 
   const notify = () =>
     toast("Service Created Successfully!", {
       position: "top-right",
       autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "light",
+    });
+
+  const DeleteAlert = () =>
+    toast("Service Deleted Successfully!", {
+      position: "top-right",
+      autoClose: 1500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -32,7 +80,6 @@ function EditService() {
         <div className="leftInput">
           <div className="row">
             <InputLabel className="label">
-              {" "}
               <span className="required">*</span>Protocol Type
             </InputLabel>
             <FormControl sx={{ m: 1, minWidth: 300 }} size="small">
@@ -41,10 +88,13 @@ function EditService() {
                 labelId="demo-select-small"
                 id="demo-select-small"
                 label="Select"
+                value={service?.protocol_type_id == 1 ? "Soap" : "Rest"}
+                onChange={(e) => {
+                  console.log(e);
+                }}
               >
                 <MenuItem value={1}>Soap</MenuItem>
                 <MenuItem value={2}>Rest</MenuItem>
-                <MenuItem value={3}>Soap 1.1</MenuItem>
               </Select>
             </FormControl>
           </div>
@@ -248,12 +298,18 @@ function EditService() {
             Cancel
           </Button>
         </Link>
-        <Button variant="outlined" color="error">
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={() => {
+            deleteService();
+          }}
+        >
           Delete
         </Button>
       </div>
     </div>
   );
-}
+};
 
 export default EditService;
