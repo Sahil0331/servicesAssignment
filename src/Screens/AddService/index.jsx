@@ -1,6 +1,7 @@
 import "../../App.css";
-import React from "react";
-import { InputLabel } from "@mui/material";
+
+import React, { useState, useEffect } from "react";
+import { InputLabel, Radio } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -56,17 +57,6 @@ const returnTypeData = [
   },
 ];
 
-const overRideData = [
-  {
-    label: "override1",
-    value: "0",
-  },
-  {
-    label: "override2",
-    value: "1",
-  },
-];
-
 const AddService = () => {
   const notify = () =>
     toast("Service Created Successfully!", {
@@ -83,19 +73,47 @@ const AddService = () => {
     service_description: "",
     operation_name: "",
     parameter_name: "",
-    operation_list_type: false,
+    operation_list_type: "",
     is_operation_return_nullable: false,
-    is_parameter_type_nullable: false,
-    parameter_list_type: false,
+    is_parameter_type_nullable: true,
+    parameter_list_type: "",
     advance_tracking: true,
   };
 
   const [toggle, setToggle] = React.useState(false);
   const [data, setData] = React.useState({});
+  const [verb, setVerb] = React.useState("");
+  const [overrideToggle, setOverrideToggle] = React.useState(false);
+  const [listArrayToggle, setListArrayToggle] = useState(false);
+  const [operationListToggle, setOperationListToggle] = useState(false);
+
+  const overRideData =
+    verb === "Get"
+      ? [
+          {
+            label: "override1",
+            value: "1",
+          },
+          {
+            label: "override2",
+            value: "2",
+          },
+        ]
+      : [
+          {
+            label: "override3",
+            value: "3",
+          },
+          {
+            label: "override4",
+            value: "4",
+          },
+        ];
   const navigate = useNavigate();
   const {
     handleSubmit,
     control,
+    register,
     formState: { errors, isValid },
   } = useForm({
     mode: "all",
@@ -132,10 +150,11 @@ const AddService = () => {
       });
   };
 
+  console.log(data);
   return (
     <div className="container">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <h4>Service</h4>
+        <h4> Add Service</h4>
         <div className="header">
           <p> - Connection Service</p>
         </div>
@@ -237,14 +256,46 @@ const AddService = () => {
                   </FormControl>
                 </div>
                 <div className="row">
-                  <InputLabel className="label">Is List</InputLabel>
-                  <FormControl sx={{ m: 1 }} size="small">
-                    <Controller
-                      name="operation_list_type"
-                      control={control}
-                      render={({ field }) => <Checkbox {...field} />}
-                    />
-                  </FormControl>
+                  <InputLabel className="label checkbox">Is List</InputLabel>
+                  <Checkbox
+                    onChange={(e) => {
+                      e.target.checked
+                        ? setOperationListToggle(true)
+                        : setOperationListToggle(false);
+                    }}
+                  />
+                  {operationListToggle && (
+                    <div style={{ display: "flex" }}>
+                      <div className="radioWrapper">
+                        <label htmlFor="Array">
+                          <input
+                            {...register("operation_list_type", {
+                              required: true,
+                            })}
+                            type="radio"
+                            name="operation_list_type"
+                            value="List"
+                            className="radio"
+                          />
+                          List
+                        </label>
+                      </div>
+                      <div className="radioWrapper">
+                        <label htmlFor="Array">
+                          <input
+                            {...register("operation_list_type", {
+                              required: true,
+                            })}
+                            type="radio"
+                            name="operation_list_type"
+                            value="Array"
+                            className="radio"
+                          />
+                          Array
+                        </label>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="row">
                   <InputLabel className="label">
@@ -255,6 +306,10 @@ const AddService = () => {
                       data={verbData}
                       name="verb_id"
                       control={control}
+                      onChange={(e) => {
+                        setVerb(e.label);
+                        setOverrideToggle(true);
+                      }}
                     />
                     <h3 className="error-message">
                       {errors?.verb_id && errors?.verb_id?.message}
@@ -289,8 +344,10 @@ const AddService = () => {
                       data={overRideData}
                       name="override_id"
                       control={control}
+                      disabled={!overrideToggle}
                     />
                     <h3 className="error-message">
+                      {!overrideToggle && "Please Select Verb First."}
                       {errors?.override_id && errors?.override_id?.message}
                     </h3>
                   </div>
@@ -332,12 +389,46 @@ const AddService = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <InputLabel className="label">Is List</InputLabel>
-                  <Controller
-                    name="parameter_list_type"
-                    control={control}
-                    render={({ field }) => <Checkbox {...field} />}
+                  <InputLabel className="label checkbox">Is List</InputLabel>
+                  <Checkbox
+                    onChange={(e) => {
+                      e.target.checked
+                        ? setListArrayToggle(true)
+                        : setListArrayToggle(false);
+                    }}
                   />
+                  {listArrayToggle && (
+                    <div style={{ display: "flex" }}>
+                      <div className="radioWrapper">
+                        <label htmlFor="Array">
+                          <input
+                            {...register("parameter_list_type", {
+                              required: true,
+                            })}
+                            type="radio"
+                            name="parameter_list_type"
+                            value="List"
+                            className="radio"
+                          />
+                          List
+                        </label>
+                      </div>
+                      <div className="radioWrapper">
+                        <label htmlFor="Array">
+                          <input
+                            {...register("parameter_list_type", {
+                              required: true,
+                            })}
+                            type="radio"
+                            name="parameter_list_type"
+                            value="Array"
+                            className="radio"
+                          />
+                          Array
+                        </label>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="middleInput">
@@ -360,11 +451,13 @@ const AddService = () => {
               </div>
               <div className="lastSection">
                 <div className="row">
-                  <InputLabel className="label">Is Nullable</InputLabel>
+                  <InputLabel className="label checkbox">
+                    Is Nullable
+                  </InputLabel>
                   <Controller
                     name="is_parameter_type_nullable"
                     control={control}
-                    render={({ field }) => <Checkbox {...field} />}
+                    render={({ field }) => <Checkbox {...field} checked />}
                   />
                 </div>
               </div>

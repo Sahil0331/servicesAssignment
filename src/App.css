@@ -96,3 +96,15 @@
   align-items: center;
   height: 10vh;
 }
+
+.radioWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.radio {
+  width: 17px !important;
+  height: 17px !important;
+  margin: 0 1rem;
+}
