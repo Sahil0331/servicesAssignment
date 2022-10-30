@@ -72,8 +72,11 @@ const EditService = () => {
   }, []);
 
   useEffect(() => {
-    const arr = post?.filter((item) => item.id === query);
-    setService(arr?.[0]);
+    post?.map((item) => {
+      if (item.id == query) {
+        setService(item);
+      }
+    });
   }, [post, query]);
 
   const deleteService = () => {
@@ -190,6 +193,7 @@ const EditService = () => {
         });
     }
   }, [data]);
+  console.log(service);
   return (
     <div className="container">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -208,7 +212,11 @@ const EditService = () => {
                   data={ProtocolData}
                   name="protocol_type_id"
                   control={control}
-                  defaultValue={array[0]}
+                  defaultValue={
+                    service?.protocol_type_id == 1
+                      ? ProtocolData[0]
+                      : ProtocolData[1]
+                  }
                   onChange={() => {
                     setToggle(true);
                   }}
@@ -230,7 +238,8 @@ const EditService = () => {
                   control={control}
                   name="service_name"
                   className="input"
-                  placeholder="Enter Service Name"
+                  defaultValue={service && service?.service_name}
+                  placeholder={"Enter Service Name"}
                 />
                 <h3 className="error-message">
                   {errors?.service_name && errors?.service_name?.message}
@@ -520,6 +529,15 @@ const EditService = () => {
               Cancel
             </Button>
           </Link>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => {
+              deleteService();
+            }}
+          >
+            Delete
+          </Button>
         </div>
       </form>
     </div>
