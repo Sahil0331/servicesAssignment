@@ -56,17 +56,6 @@ const returnTypeData = [
   },
 ];
 
-const overRideData = [
-  {
-    label: "override1",
-    value: "1",
-  },
-  {
-    label: "override2",
-    value: "2",
-  },
-];
-
 const AddService = () => {
   const notify = () =>
     toast("Service Created Successfully!", {
@@ -159,8 +148,6 @@ const AddService = () => {
         });
     }
   }, [data]);
-
-  console.log("data", data);
   return (
     <div className="container">
       <form onSubmit={handleSubmit(onSubmit)}>
