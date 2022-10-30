@@ -3,7 +3,7 @@ import React from "react";
 import { InputLabel } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import FormControl from "@mui/material/FormControl";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
@@ -13,6 +13,7 @@ import { VALIDATION_SCHEMA } from "../../utils/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Textarea from "../../Components/TextArea";
 import SelectField from "../../Components/SelectField";
+import axios from "axios";
 
 const ProtocolData = [
   {
@@ -67,12 +68,10 @@ const overRideData = [
 ];
 
 const AddService = () => {
-  const label = { inputProps: { "aria-label": "Checkbox demo" } };
-
   const notify = () =>
     toast("Service Created Successfully!", {
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 1000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -84,12 +83,20 @@ const AddService = () => {
     service_name: "",
     service_description: "",
     operation_name: "",
+    parameter_name: "",
+    operation_list_type: false,
+    is_operation_return_nullable: false,
+    is_parameter_type_nullable: false,
+    parameter_list_type: false,
+    advance_tracking: true,
   };
+
   const [toggle, setToggle] = React.useState(false);
+  const [data, setData] = React.useState({});
+  const navigate = useNavigate();
   const {
     handleSubmit,
     control,
-    register,
     formState: { errors, isValid },
   } = useForm({
     mode: "all",
@@ -98,7 +105,33 @@ const AddService = () => {
     shouldFocusError: true,
     defaultValues,
   });
-  const onSubmit = (data) => console.log(data, "data");
+
+  const onSubmit = (value) => {
+    setData({
+      ...value,
+      override_id: value?.override_id?.value,
+      operation_return_type_id: value?.operation_return_type_id?.value,
+      protocol_type_id: value?.protocol_type_id?.protocol_type_id,
+      verb_id: value?.verb_id?.value,
+      parameter_type_id: value?.parameter_type_id?.value,
+    });
+
+    setTimeout(() => sendData(), 1500);
+  };
+
+  const sendData = () => {
+    axios
+      .post("https://localhost:44386/api/nikita_Connection_Service", data)
+      .then((res) => {
+        if (res.status === 200) {
+          notify();
+          setTimeout(() => Navigate("/"), 1000);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   return (
     <div className="container">
@@ -155,7 +188,7 @@ const AddService = () => {
                 <Controller
                   name="advance_tracking"
                   control={control}
-                  render={({ field }) => <Checkbox {...field} />}
+                  render={({ field }) => <Checkbox {...field} checked />}
                 />
               </FormControl>
             </div>
@@ -340,17 +373,15 @@ const AddService = () => {
           </>
         )}
         <div className="buttons">
-          {/* <Link to={"/"}> */}
           <Button
             variant="outlined"
             color="success"
             // onClick={notify}
             type="submit"
-            // disabled={!isValid}
+            disabled={!isValid}
           >
             Save
           </Button>
-          {/* </Link> */}
           <ToastContainer />
           <Link to={"/"}>
             <Button variant="outlined" color="secondary">
