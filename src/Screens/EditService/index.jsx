@@ -1,5 +1,5 @@
 import "../../App.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { InputLabel } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { useForm } from "react-hook-form";
@@ -25,7 +25,7 @@ const ProtocolData = [
   },
   {
     label: "Rest",
-    value: "1",
+    value: "2",
   },
 ];
 
@@ -47,26 +47,15 @@ const verbData = [
 const returnTypeData = [
   {
     label: "Int",
-    value: "0",
+    value: "1",
   },
   {
     label: "String",
-    value: "1",
+    value: "2",
   },
   {
     label: "Boolean",
-    value: "2",
-  },
-];
-
-const overRideData = [
-  {
-    label: "override1",
-    value: "0",
-  },
-  {
-    label: "override2",
-    value: "1",
+    value: "3",
   },
 ];
 
@@ -98,7 +87,6 @@ const EditService = () => {
       })
       .catch((err) => console.log(err, "error here"));
   };
-
   const notify = () =>
     toast("Service Created Successfully!", {
       position: "top-right",
@@ -126,19 +114,47 @@ const EditService = () => {
     service_description: "",
     operation_name: "",
     parameter_name: "",
-    operation_list_type: false,
+    operation_list_type: "",
     is_operation_return_nullable: false,
-    is_parameter_type_nullable: false,
-    parameter_list_type: false,
+    is_parameter_type_nullable: true,
+    parameter_list_type: "",
     advance_tracking: true,
   };
 
   const [toggle, setToggle] = React.useState(false);
   const [data, setData] = React.useState({});
+  const [verb, setVerb] = React.useState("");
+  const [overrideToggle, setOverrideToggle] = React.useState(false);
+  const [listArrayToggle, setListArrayToggle] = useState(false);
+  const [operationListToggle, setOperationListToggle] = useState(false);
+
+  const overRideData =
+    verb === "Get"
+      ? [
+          {
+            label: "override1",
+            value: "1",
+          },
+          {
+            label: "override2",
+            value: "2",
+          },
+        ]
+      : [
+          {
+            label: "override3",
+            value: "3",
+          },
+          {
+            label: "override4",
+            value: "4",
+          },
+        ];
   const navigate = useNavigate();
   const {
     handleSubmit,
     control,
+    register,
     formState: { errors, isValid },
   } = useForm({
     mode: "all",
@@ -153,28 +169,27 @@ const EditService = () => {
       ...value,
       override_id: value?.override_id?.value,
       operation_return_type_id: value?.operation_return_type_id?.value,
-      protocol_type_id: value?.protocol_type_id?.protocol_type_id,
       verb_id: value?.verb_id?.value,
       parameter_type_id: value?.parameter_type_id?.value,
+      protocol_type_id: value?.protocol_type_id?.value,
     });
-
-    setTimeout(() => sendData(), 2500);
   };
 
-  const sendData = () => {
-    axios
-      .post("https://localhost:44386/api/nikita_Connection_Service", data)
-      .then((res) => {
-        if (res.status === 200) {
-          notify();
-          setTimeout(() => navigate("/"), 1000);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
+  React.useEffect(() => {
+    if (data?.protocol_type_id == 1 || data?.protocol_type_id == 2) {
+      axios
+        .post("https://localhost:44386/api/nikita_Connection_Service", data)
+        .then((res) => {
+          if (res.status === 200) {
+            notify();
+            setTimeout(() => navigate("/"), 1000);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  }, [data]);
   return (
     <div className="container">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -281,14 +296,46 @@ const EditService = () => {
                   </FormControl>
                 </div>
                 <div className="row">
-                  <InputLabel className="label">Is List</InputLabel>
-                  <FormControl sx={{ m: 1 }} size="small">
-                    <Controller
-                      name="operation_list_type"
-                      control={control}
-                      render={({ field }) => <Checkbox {...field} />}
-                    />
-                  </FormControl>
+                  <InputLabel className="label checkbox">Is List</InputLabel>
+                  <Checkbox
+                    onChange={(e) => {
+                      e.target.checked
+                        ? setOperationListToggle(true)
+                        : setOperationListToggle(false);
+                    }}
+                  />
+                  {operationListToggle && (
+                    <div style={{ display: "flex" }}>
+                      <div className="radioWrapper">
+                        <label htmlFor="Array">
+                          <input
+                            {...register("operation_list_type", {
+                              required: true,
+                            })}
+                            type="radio"
+                            name="operation_list_type"
+                            value="List"
+                            className="radio"
+                          />
+                          List
+                        </label>
+                      </div>
+                      <div className="radioWrapper">
+                        <label htmlFor="Array">
+                          <input
+                            {...register("operation_list_type", {
+                              required: true,
+                            })}
+                            type="radio"
+                            name="operation_list_type"
+                            value="Array"
+                            className="radio"
+                          />
+                          Array
+                        </label>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="row">
                   <InputLabel className="label">
@@ -299,6 +346,10 @@ const EditService = () => {
                       data={verbData}
                       name="verb_id"
                       control={control}
+                      onChange={(e) => {
+                        setVerb(e.label);
+                        setOverrideToggle(true);
+                      }}
                     />
                     <h3 className="error-message">
                       {errors?.verb_id && errors?.verb_id?.message}
@@ -333,8 +384,10 @@ const EditService = () => {
                       data={overRideData}
                       name="override_id"
                       control={control}
+                      disabled={!overrideToggle}
                     />
                     <h3 className="error-message">
+                      {!overrideToggle && "Please Select Verb First."}
                       {errors?.override_id && errors?.override_id?.message}
                     </h3>
                   </div>
@@ -376,12 +429,46 @@ const EditService = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <InputLabel className="label">Is List</InputLabel>
-                  <Controller
-                    name="parameter_list_type"
-                    control={control}
-                    render={({ field }) => <Checkbox {...field} />}
+                  <InputLabel className="label checkbox">Is List</InputLabel>
+                  <Checkbox
+                    onChange={(e) => {
+                      e.target.checked
+                        ? setListArrayToggle(true)
+                        : setListArrayToggle(false);
+                    }}
                   />
+                  {listArrayToggle && (
+                    <div style={{ display: "flex" }}>
+                      <div className="radioWrapper">
+                        <label htmlFor="Array">
+                          <input
+                            {...register("parameter_list_type", {
+                              required: true,
+                            })}
+                            type="radio"
+                            name="parameter_list_type"
+                            value="List"
+                            className="radio"
+                          />
+                          List
+                        </label>
+                      </div>
+                      <div className="radioWrapper">
+                        <label htmlFor="Array">
+                          <input
+                            {...register("parameter_list_type", {
+                              required: true,
+                            })}
+                            type="radio"
+                            name="parameter_list_type"
+                            value="Array"
+                            className="radio"
+                          />
+                          Array
+                        </label>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="middleInput">
@@ -404,11 +491,13 @@ const EditService = () => {
               </div>
               <div className="lastSection">
                 <div className="row">
-                  <InputLabel className="label">Is Nullable</InputLabel>
+                  <InputLabel className="label checkbox">
+                    Is Nullable
+                  </InputLabel>
                   <Controller
                     name="is_parameter_type_nullable"
                     control={control}
-                    render={({ field }) => <Checkbox {...field} />}
+                    render={({ field }) => <Checkbox {...field} checked />}
                   />
                 </div>
               </div>
@@ -431,15 +520,6 @@ const EditService = () => {
               Cancel
             </Button>
           </Link>
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={() => {
-              deleteService();
-            }}
-          >
-            Delete
-          </Button>
         </div>
       </form>
     </div>
