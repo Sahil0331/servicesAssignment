@@ -1,0 +1,97 @@
+.container {
+  margin: 0 auto;
+}
+
+.container h4 {
+  margin: 0.3rem auto;
+}
+
+.container .header {
+  background-color: #5f85bb;
+  height: 25px;
+}
+
+.container .header p {
+  color: white;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-family: 'Inconsolata', monospace;
+  margin: 0;
+}
+
+.container .inputSection {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: flex-start;
+  height: 35vh;
+  gap: 4%;
+}
+
+.container .leftInput {
+  margin-left: 5%;
+  margin-top: 10px;
+}
+
+.container .inputSection .middleInput {
+  width: 35%;
+}
+
+.container .inputSection .rightInput {
+  width: 50%;
+}
+
+.container .row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.container .inputSection .textArea {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.container .serviceDescription {
+  margin-top: 10px;
+}
+
+.required {
+  color: red;
+  font-size: 1.2rem;
+}
+
+.container hr {
+  margin: 0;
+}
+
+.container .greyBox {
+  height: 12vh;
+  background-color: #fbf9f9;
+}
+
+.label {
+  width: 10.5rem;
+  margin-right: 33px;
+  margin-bottom: 12px;
+}
+
+.label.checkbox {
+  margin-bottom: 0;
+}
+
+.container .buttons {
+  display: flex;
+  gap: 1rem;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 10vh;
+}
