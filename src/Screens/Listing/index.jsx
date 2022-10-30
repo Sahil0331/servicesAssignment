@@ -61,11 +61,7 @@ export default function Lisiting() {
                     onClick={() => navigate(`/editService?${row?.id}`)}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      key={row.service_name}
-                    >
+                    <TableCell component="th" scope="row" key={row?.id}>
                       {row.protocol_type_id === 1 ? "Soap" : "Rest"}
                     </TableCell>
                     <TableCell align="right">{row.service_name}</TableCell>

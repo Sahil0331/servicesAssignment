@@ -1,5 +1,5 @@
 import "../../App.css";
-import React from "react";
+import React, { useEffect } from "react";
 import { InputLabel } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { useForm } from "react-hook-form";
@@ -22,48 +22,48 @@ const ProtocolData = [
   },
   {
     label: "Rest",
-    value: "1",
+    value: "2",
   },
 ];
 
 const verbData = [
   {
     label: "Get",
-    value: "0",
-  },
-  {
-    label: "Put",
     value: "1",
   },
   {
-    label: "Delete",
+    label: "Put",
     value: "2",
+  },
+  {
+    label: "Delete",
+    value: "3",
   },
 ];
 
 const returnTypeData = [
   {
     label: "Int",
-    value: "0",
-  },
-  {
-    label: "String",
     value: "1",
   },
   {
-    label: "Boolean",
+    label: "String",
     value: "2",
+  },
+  {
+    label: "Boolean",
+    value: "3",
   },
 ];
 
 const overRideData = [
   {
     label: "override1",
-    value: "0",
+    value: "1",
   },
   {
     label: "override2",
-    value: "1",
+    value: "2",
   },
 ];
 
@@ -111,28 +111,29 @@ const AddService = () => {
       ...value,
       override_id: value?.override_id?.value,
       operation_return_type_id: value?.operation_return_type_id?.value,
-      protocol_type_id: value?.protocol_type_id?.protocol_type_id,
       verb_id: value?.verb_id?.value,
       parameter_type_id: value?.parameter_type_id?.value,
+      protocol_type_id: value?.protocol_type_id?.value,
     });
-
-    setTimeout(() => sendData(), 1500);
   };
 
-  const sendData = () => {
-    axios
-      .post("https://localhost:44386/api/nikita_Connection_Service", data)
-      .then((res) => {
-        if (res.status === 200) {
-          notify();
-          setTimeout(() => Navigate("/"), 1000);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
+  React.useEffect(() => {
+    if (data?.protocol_type_id == 1 || data?.protocol_type_id == 2) {
+      axios
+        .post("https://localhost:44386/api/nikita_Connection_Service", data)
+        .then((res) => {
+          if (res.status === 200) {
+            notify();
+            setTimeout(() => navigate("/"), 1000);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  }, [data]);
 
+  console.log("data", data);
   return (
     <div className="container">
       <form onSubmit={handleSubmit(onSubmit)}>
