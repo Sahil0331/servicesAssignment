@@ -27,13 +27,14 @@
   flex-direction: row;
   align-items: baseline;
   justify-content: flex-start;
-  height: 35vh;
+  height: 40vh;
   gap: 4%;
 }
 
 .container .leftInput {
-  margin-left: 5%;
+  margin-left: 1%;
   margin-top: 10px;
+  width: 35%;
 }
 
 .container .inputSection .middleInput {

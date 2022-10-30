@@ -22,15 +22,55 @@ const ProtocolData = [
   {
     label: "Soap",
     value: "1",
-    id: "1",
   },
   {
     label: "Rest",
     value: "1",
-    id: "1",
   },
 ];
-function AddService() {
+
+const verbData = [
+  {
+    label: "Get",
+    value: "0",
+  },
+  {
+    label: "Put",
+    value: "1",
+  },
+  {
+    label: "Delete",
+    value: "2",
+  },
+];
+
+const returnTypeData = [
+  {
+    label: "Int",
+    value: "0",
+  },
+  {
+    label: "String",
+    value: "1",
+  },
+  {
+    label: "Boolean",
+    value: "2",
+  },
+];
+
+const overRideData = [
+  {
+    label: "override1",
+    value: "0",
+  },
+  {
+    label: "override2",
+    value: "1",
+  },
+];
+
+const AddService = () => {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
   const notify = () =>
@@ -47,6 +87,7 @@ function AddService() {
     service_name: "",
     service_name: "",
     service_description: "",
+    operation_name: "",
   };
   const [toggle, setToggle] = React.useState(false);
   const {
@@ -79,14 +120,15 @@ function AddService() {
               <div>
                 <SelectField
                   data={ProtocolData}
-                  name="protocol_type"
+                  name="protocol_type_id"
                   control={control}
                   onChange={() => {
                     setToggle(true);
                   }}
                 />
                 <h3 className="error-message">
-                  {errors?.protocol_type && errors?.protocol_type?.message}
+                  {errors?.protocol_type_id &&
+                    errors?.protocol_type_id?.message}
                 </h3>
               </div>
             </div>
@@ -133,10 +175,6 @@ function AddService() {
                   name={"service_description"}
                   className="textArea"
                 />
-                <h3 className="error-message">
-                  {errors?.service_description &&
-                    errors?.service_description?.message}
-                </h3>
               </div>
             </div>
           </div>
@@ -155,85 +193,90 @@ function AddService() {
                     <span className="required">*</span>Operation
                   </InputLabel>
                   <FormControl sx={{ m: 1, minWidth: 300 }} size="small">
-                    <TextField
-                      id="outlined-basic"
-                      label="Enter Operation Name"
-                      variant="outlined"
-                      size="small"
-                    />
+                    <div>
+                      <TextInput
+                        type="text"
+                        control={control}
+                        name="operation_name"
+                        className="input"
+                        placeholder="Enter Operation Name"
+                      />
+                      <h3 className="error-message">
+                        {errors?.operation_name &&
+                          errors?.operation_name?.message}
+                      </h3>
+                    </div>
                   </FormControl>
                 </div>
                 <div className="row">
                   <InputLabel className="label">Is List</InputLabel>
                   <FormControl sx={{ m: 1 }} size="small">
-                    <Checkbox {...label} />
+                    <Controller
+                      name="operation_list_type"
+                      control={control}
+                      render={({ field }) => <Checkbox {...field} />}
+                    />
                   </FormControl>
                 </div>
                 <div className="row">
                   <InputLabel className="label">
-                    {" "}
                     <span className="required">*</span>Verb
                   </InputLabel>
-                  <FormControl sx={{ m: 1, minWidth: 300 }} size="small">
-                    <InputLabel> Select</InputLabel>
-                    <Select
-                      labelId="demo-select-small"
-                      id="demo-select-small"
-                      label="Select"
-                    >
-                      <MenuItem value={1}>Get</MenuItem>
-                      <MenuItem value={2}>Delete</MenuItem>
-                      <MenuItem value={3}>Put</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <div>
+                    <SelectField
+                      data={verbData}
+                      name="verb_id"
+                      control={control}
+                    />
+                    <h3 className="error-message">
+                      {errors?.verb_id && errors?.verb_id?.message}
+                    </h3>
+                  </div>
                 </div>
               </div>
               <div className="middleInput">
                 <div className="row">
                   <InputLabel className="label">
-                    {" "}
                     <span className="required">*</span>Return Type
                   </InputLabel>
-                  <FormControl sx={{ m: 1, minWidth: 300 }} size="small">
-                    <InputLabel> -- Select --</InputLabel>
-                    <Select
-                      labelId="demo-select-small"
-                      id="demo-select-small"
-                      label="Select"
-                    >
-                      <MenuItem value={1}>Int</MenuItem>
-                      <MenuItem value={2}>String</MenuItem>
-                      <MenuItem value={3}>Boolean</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <div>
+                    <SelectField
+                      data={returnTypeData}
+                      name="operation_return_type_id"
+                      control={control}
+                    />
+                    <h3 className="error-message">
+                      {errors?.operation_return_type_id &&
+                        errors?.operation_return_type_id?.message}
+                    </h3>
+                  </div>
                 </div>
+
                 <div className="row">
-                  <InputLabel className="label">Validate Data</InputLabel>
-                  <FormControl sx={{ m: 1 }} size="small">
-                    <Checkbox {...label} />
-                  </FormControl>
-                </div>
-                <div className="row">
-                  <InputLabel className="label">Override Name</InputLabel>
-                  <FormControl sx={{ m: 1, minWidth: 300 }} size="small">
-                    <InputLabel> -- Select --</InputLabel>
-                    <Select
-                      labelId="demo-select-small"
-                      id="demo-select-small"
-                      label="Select"
-                      disabled
-                    >
-                      <MenuItem value={1}>Override 1</MenuItem>
-                      <MenuItem value={2}>Override 2</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <InputLabel className="label">
+                    <span className="required">*</span>Override Name
+                  </InputLabel>
+                  <div>
+                    <SelectField
+                      data={overRideData}
+                      name="override_id"
+                      control={control}
+                    />
+                    <h3 className="error-message">
+                      {errors?.override_id && errors?.override_id?.message}
+                    </h3>
+                  </div>
                 </div>
               </div>
               <div className="lastSection">
                 <div className="row">
                   <InputLabel className="label">Is Nullable</InputLabel>
                   <FormControl sx={{ m: 1 }} size="small">
-                    <Checkbox {...label} />
+                    <Controller
+                      name="is_operation_return_nullable"
+                      control={control}
+                      render={({ field }) => <Checkbox {...field} />}
+                    />
                   </FormControl>
                 </div>
               </div>
@@ -244,51 +287,57 @@ function AddService() {
               <div className="leftInput">
                 <div className="row">
                   <InputLabel className="label">
-                    {" "}
                     <span className="required">*</span>Parameter
                   </InputLabel>
-                  <FormControl sx={{ m: 1, minWidth: 300 }} size="small">
-                    <TextField
-                      id="outlined-basic"
-                      label="Enter Parameter Name"
-                      variant="outlined"
-                      size="small"
+                  <div>
+                    <TextInput
+                      type="text"
+                      control={control}
+                      name="parameter_name"
+                      className="input"
+                      placeholder="Enter Service Name"
                     />
-                  </FormControl>
+                    <h3 className="error-message">
+                      {errors?.parameter_name &&
+                        errors?.parameter_name?.message}
+                    </h3>
+                  </div>
                 </div>
                 <div className="row">
                   <InputLabel className="label">Is List</InputLabel>
-                  <FormControl sx={{ m: 1 }} size="small">
-                    <Checkbox {...label} />
-                  </FormControl>
+                  <Controller
+                    name="parameter_list_type"
+                    control={control}
+                    render={({ field }) => <Checkbox {...field} />}
+                  />
                 </div>
               </div>
               <div className="middleInput">
                 <div className="row">
                   <InputLabel className="label">
-                    {" "}
                     <span className="required">*</span> Type
                   </InputLabel>
-                  <FormControl sx={{ m: 1, minWidth: 300 }} size="small">
-                    <InputLabel> -- Select --</InputLabel>
-                    <Select
-                      labelId="demo-select-small"
-                      id="demo-select-small"
-                      label="Select"
-                    >
-                      <MenuItem value={1}>Int</MenuItem>
-                      <MenuItem value={2}>String</MenuItem>
-                      <MenuItem value={3}>Boolean</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <div>
+                    <SelectField
+                      data={returnTypeData}
+                      name="parameter_type_id"
+                      control={control}
+                    />
+                    <h3 className="error-message">
+                      {errors?.parameter_type_id &&
+                        errors?.parameter_type_id?.message}
+                    </h3>
+                  </div>
                 </div>
               </div>
               <div className="lastSection">
                 <div className="row">
                   <InputLabel className="label">Is Nullable</InputLabel>
-                  <FormControl sx={{ m: 1 }} size="small">
-                    <Checkbox {...label} />
-                  </FormControl>
+                  <Controller
+                    name="is_parameter_type_nullable"
+                    control={control}
+                    render={({ field }) => <Checkbox {...field} />}
+                  />
                 </div>
               </div>
             </div>
@@ -299,9 +348,9 @@ function AddService() {
           <Button
             variant="outlined"
             color="success"
-            onClick={notify}
+            // onClick={notify}
             type="submit"
-            disabled={!isValid}
+            // disabled={!isValid}
           >
             Save
           </Button>
@@ -316,6 +365,6 @@ function AddService() {
       </form>
     </div>
   );
-}
+};
 
 export default AddService;
