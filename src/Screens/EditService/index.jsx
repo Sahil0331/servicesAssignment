@@ -16,7 +16,6 @@ import SelectField from "../../Components/SelectField";
 import axios from "axios";
 
 const baseURL = "https://localhost:44386/api/nikita_Connection_Service";
-const array = [];
 
 const ProtocolData = [
   {
@@ -124,7 +123,9 @@ const EditService = () => {
     advance_tracking: true,
   };
 
-  const [toggle, setToggle] = React.useState(false);
+  const [toggle, setToggle] = React.useState(
+    service?.protocol_type_id.length ? true : false
+  );
   const [data, setData] = React.useState({});
   const [verb, setVerb] = React.useState("");
   const [overrideToggle, setOverrideToggle] = React.useState(false);
@@ -355,6 +356,13 @@ const EditService = () => {
                       data={verbData}
                       name="verb_id"
                       control={control}
+                      defaultValue={
+                        service?.verb_id === 1
+                          ? verbData[0]
+                          : service?.verb_id === 2
+                          ? verbData[1]
+                          : verbData[2]
+                      }
                       onChange={(e) => {
                         setVerb(e.label);
                         setOverrideToggle(true);
@@ -376,6 +384,13 @@ const EditService = () => {
                       data={returnTypeData}
                       name="operation_return_type_id"
                       control={control}
+                      defaultValue={
+                        service?.operation_return_type_id === 1
+                          ? returnTypeData[0]
+                          : service?.operation_return_type_id === 2
+                          ? returnTypeData[1]
+                          : returnTypeData[2]
+                      }
                     />
                     <h3 className="error-message">
                       {errors?.operation_return_type_id &&
