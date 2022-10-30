@@ -11,18 +11,6 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("Soap1", "Service 1", "Oper 1", "Param 1", "Type 1"),
-  createData("Soap2", "Service 2", "Oper 2", "Param 2", "Type 2"),
-  createData("Soap3", "Service 3", "Oper 3", "Param 3", "Type 3"),
-  createData("Soap4", "Service 4", "Oper 4", "Param 4", "Type 4"),
-  createData("Soap5", "Service 5", "Oper 5", "Param 5", "Type 5"),
-];
-
 const baseURL = "https://localhost:44386/api/nikita_Connection_Service";
 export default function Lisiting() {
   const navigate = useNavigate();

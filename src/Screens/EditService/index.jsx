@@ -4,7 +4,7 @@ import { InputLabel } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
@@ -20,7 +20,7 @@ const EditService = () => {
   const [post, setPost] = React.useState(null);
   const [service, setService] = React.useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     axios.get(baseURL).then((response) => {
       setPost(response.data);
     });
@@ -28,20 +28,16 @@ const EditService = () => {
 
   const navigate = useNavigate();
 
-  const serviceFinder = () => {
-    const arr = post?.filter((item) => item.id == query);
-    setService(arr?.[0]);
-  };
-
   useEffect(() => {
-    serviceFinder();
-  }, [post]);
+    const arr = post?.filter((item) => item.id === query);
+    setService(arr?.[0]);
+  }, [post, query]);
 
   const deleteService = () => {
     axios
       .delete(`https://localhost:44386/api/nikita_Connection_Service/${query}`)
       .then((res) => {
-        if (res.status == 200) {
+        if (res.status === 200) {
           DeleteAlert();
           setTimeout(() => navigate("/"), 1500);
         }
@@ -88,7 +84,7 @@ const EditService = () => {
                 labelId="demo-select-small"
                 id="demo-select-small"
                 label="Select"
-                value={service?.protocol_type_id == 1 ? "Soap" : "Rest"}
+                value={service?.protocol_type_id === 1 ? "Soap" : "Rest"}
                 onChange={(e) => {
                   console.log(e);
                 }}

@@ -3,7 +3,7 @@ import React from "react";
 import { InputLabel } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FormControl from "@mui/material/FormControl";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
@@ -29,15 +29,15 @@ const ProtocolData = [
 const verbData = [
   {
     label: "Get",
-    value: "0",
-  },
-  {
-    label: "Put",
     value: "1",
   },
   {
-    label: "Delete",
+    label: "Put",
     value: "2",
+  },
+  {
+    label: "Delete",
+    value: "3",
   },
 ];
 
@@ -80,7 +80,6 @@ const AddService = () => {
     });
   const defaultValues = {
     service_name: "",
-    service_name: "",
     service_description: "",
     operation_name: "",
     parameter_name: "",
@@ -116,7 +115,7 @@ const AddService = () => {
       parameter_type_id: value?.parameter_type_id?.value,
     });
 
-    setTimeout(() => sendData(), 1500);
+    setTimeout(() => sendData(), 2500);
   };
 
   const sendData = () => {
@@ -125,7 +124,7 @@ const AddService = () => {
       .then((res) => {
         if (res.status === 200) {
           notify();
-          setTimeout(() => Navigate("/"), 1000);
+          setTimeout(() => navigate("/"), 1000);
         }
       })
       .catch(function (error) {
