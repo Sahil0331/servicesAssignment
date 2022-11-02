@@ -74,13 +74,17 @@ const EditService = () => {
     post?.map((item) => {
       if (item.id == query) {
         setService(item);
+        setToggle(true);
+        setOverrideToggle(true);
       }
     });
+    service?.operation_list_type?.length > 0 && setOperationListToggle(true);
+    service?.parameter_list_type?.length > 0 && setListArrayToggle(true);
   }, [post, query]);
 
   const deleteService = () => {
     axios
-      .delete(`https://localhost:44386/api/nikita_Connection_Service/${query}`)
+      .delete(`https://localhost:44358/api/service/Delete/${query}`)
       .then((res) => {
         if (res.status === 200) {
           DeleteAlert();
@@ -123,15 +127,14 @@ const EditService = () => {
     advance_tracking: true,
   };
 
-  const [toggle, setToggle] = React.useState(
-    service?.protocol_type_id.length ? true : false
-  );
+  const [toggle, setToggle] = React.useState(false);
   const [data, setData] = React.useState({});
   const [verb, setVerb] = React.useState("");
   const [overrideToggle, setOverrideToggle] = React.useState(false);
   const [listArrayToggle, setListArrayToggle] = useState(false);
   const [operationListToggle, setOperationListToggle] = useState(false);
 
+  console.log("operationListToggle", operationListToggle);
   const overRideData =
     verb === "Get"
       ? [
@@ -256,7 +259,12 @@ const EditService = () => {
                 <Controller
                   name="advance_tracking"
                   control={control}
-                  render={({ field }) => <Checkbox {...field} checked />}
+                  render={({ field }) => (
+                    <Checkbox
+                      {...field}
+                      checked={service?.advance_tracking ? true : false}
+                    />
+                  )}
                 />
               </FormControl>
             </div>
@@ -308,6 +316,7 @@ const EditService = () => {
                 <div className="row">
                   <InputLabel className="label checkbox">Is List</InputLabel>
                   <Checkbox
+                    checked={service?.operation_list_type.length ? true : false}
                     onChange={(e) => {
                       e.target.checked
                         ? setOperationListToggle(true)
@@ -409,6 +418,17 @@ const EditService = () => {
                       name="override_id"
                       control={control}
                       disabled={!overrideToggle}
+                      default={
+                        service?.override_id == 1 && service?.verb_id == 1
+                          ? overRideData[0]
+                          : service?.override_id == 2 && service?.verb_id == 1
+                          ? overRideData[1]
+                          : service?.override_id == 1 && service?.verb_id == 2
+                          ? overRideData[0]
+                          : service?.override_id == 2 && service?.verb_id == 2
+                          ? overRideData[1]
+                          : overRideData[1]
+                      }
                     />
                     <h3 className="error-message">
                       {!overrideToggle && "Please Select Verb First."}
@@ -419,12 +439,21 @@ const EditService = () => {
               </div>
               <div className="lastSection">
                 <div className="row">
-                  <InputLabel className="label">Is Nullable</InputLabel>
+                  <InputLabel className="label checkbox">
+                    Is Nullable
+                  </InputLabel>
                   <FormControl sx={{ m: 1 }} size="small">
                     <Controller
                       name="is_operation_return_nullable"
                       control={control}
-                      render={({ field }) => <Checkbox {...field} />}
+                      render={({ field }) => (
+                        <Checkbox
+                          {...field}
+                          checked={
+                            service?.is_operation_return_nullable ? true : false
+                          }
+                        />
+                      )}
                     />
                   </FormControl>
                 </div>
@@ -455,6 +484,7 @@ const EditService = () => {
                 <div className="row">
                   <InputLabel className="label checkbox">Is List</InputLabel>
                   <Checkbox
+                    checked={service?.parameter_list_type.length ? true : false}
                     onChange={(e) => {
                       e.target.checked
                         ? setListArrayToggle(true)
@@ -505,6 +535,13 @@ const EditService = () => {
                       data={returnTypeData}
                       name="parameter_type_id"
                       control={control}
+                      defaultValue={
+                        service?.parameter_type_id === 1
+                          ? returnTypeData[0]
+                          : service?.parameter_type_id === 2
+                          ? returnTypeData[1]
+                          : returnTypeData[2]
+                      }
                     />
                     <h3 className="error-message">
                       {errors?.parameter_type_id &&
@@ -521,7 +558,14 @@ const EditService = () => {
                   <Controller
                     name="is_parameter_type_nullable"
                     control={control}
-                    render={({ field }) => <Checkbox {...field} checked />}
+                    render={({ field }) => (
+                      <Checkbox
+                        {...field}
+                        checked={
+                          service?.is_parameter_type_nullable ? true : false
+                        }
+                      />
+                    )}
                   />
                 </div>
               </div>

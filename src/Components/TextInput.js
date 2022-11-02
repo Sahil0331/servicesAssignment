@@ -23,8 +23,8 @@ const TextInput = (props) => {
             placeholder={props.placeholder}
             defaultValue={props?.defaultValue}
             style={props?.style}
-            disabled={props.disabled}
-            value={props?.value || value}
+            disabled={props?.disabled}
+            value={props?.value && props.value}
             rules={rules}
             name={props?.name}
             maxLength={props?.maxLength}

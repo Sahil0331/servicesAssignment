@@ -68,15 +68,15 @@ const AddService = () => {
       theme: "light",
     });
   const defaultValues = {
-    service_name: "",
-    service_description: "",
-    operation_name: "",
-    parameter_name: "",
-    operation_list_type: "",
-    is_operation_return_nullable: false,
-    is_parameter_type_nullable: true,
-    parameter_list_type: "",
-    advance_tracking: true,
+    serviceName: "",
+    serviceDescription: "",
+    operationName: "",
+    parameterName: "",
+    operationListType: "",
+    isOperationReturnNullable: false,
+    isParameterTypeNullable: true,
+    parameterListType: "",
+    advanceTracking: true,
   };
 
   const [toggle, setToggle] = React.useState(false);
@@ -125,18 +125,18 @@ const AddService = () => {
   const onSubmit = (value) => {
     setData({
       ...value,
-      override_id: value?.override_id?.value,
-      operation_return_type_id: value?.operation_return_type_id?.value,
-      verb_id: value?.verb_id?.value,
-      parameter_type_id: value?.parameter_type_id?.value,
-      protocol_type_id: value?.protocol_type_id?.value,
+      overrideId: parseInt(value?.overrideId?.value),
+      operationReturnTypeId: parseInt(value?.operationReturnTypeId?.value),
+      verbId: parseInt(value?.verbId?.value),
+      parameterTypeId: parseInt(value?.parameterTypeId?.value),
+      protocolTypeId: parseInt(value?.protocolTypeId?.value),
     });
   };
 
   React.useEffect(() => {
-    if (data?.protocol_type_id == 1 || data?.protocol_type_id == 2) {
+    if (data?.protocolTypeId == 1 || data?.protocolTypeId == 2) {
       axios
-        .post("https://localhost:44386/api/nikita_Connection_Service", data)
+        .post("https://localhost:44358/api/service/Add", data)
         .then((res) => {
           if (res.status === 200) {
             notify();
@@ -164,15 +164,14 @@ const AddService = () => {
               <div>
                 <SelectField
                   data={ProtocolData}
-                  name="protocol_type_id"
+                  name="protocolTypeId"
                   control={control}
                   onChange={() => {
                     setToggle(true);
                   }}
                 />
                 <h3 className="error-message">
-                  {errors?.protocol_type_id &&
-                    errors?.protocol_type_id?.message}
+                  {errors?.protocolTypeId && errors?.protocolTypeId?.message}
                 </h3>
               </div>
             </div>
@@ -185,12 +184,12 @@ const AddService = () => {
                 <TextInput
                   type="text"
                   control={control}
-                  name="service_name"
+                  name="serviceName"
                   className="input"
                   placeholder="Enter Service Name"
                 />
                 <h3 className="error-message">
-                  {errors?.service_name && errors?.service_name?.message}
+                  {errors?.serviceName && errors?.serviceName?.message}
                 </h3>
               </div>
             </div>
@@ -201,7 +200,7 @@ const AddService = () => {
               </InputLabel>
               <FormControl sx={{ m: 1 }} size="small">
                 <Controller
-                  name="advance_tracking"
+                  name="advanceTracking"
                   control={control}
                   render={({ field }) => <Checkbox {...field} checked />}
                 />
@@ -216,7 +215,7 @@ const AddService = () => {
               <div>
                 <Textarea
                   control={control}
-                  name={"service_description"}
+                  name={"serviceDescription"}
                   className="textArea"
                 />
               </div>
@@ -241,13 +240,13 @@ const AddService = () => {
                       <TextInput
                         type="text"
                         control={control}
-                        name="operation_name"
+                        name="operationName"
                         className="input"
                         placeholder="Enter Operation Name"
                       />
                       <h3 className="error-message">
-                        {errors?.operation_name &&
-                          errors?.operation_name?.message}
+                        {errors?.operationName &&
+                          errors?.operationName?.message}
                       </h3>
                     </div>
                   </FormControl>
@@ -266,11 +265,11 @@ const AddService = () => {
                       <div className="radioWrapper">
                         <label htmlFor="Array">
                           <input
-                            {...register("operation_list_type", {
+                            {...register("operationListType", {
                               required: true,
                             })}
                             type="radio"
-                            name="operation_list_type"
+                            name="operationListType"
                             value="List"
                             className="radio"
                           />
@@ -280,11 +279,11 @@ const AddService = () => {
                       <div className="radioWrapper">
                         <label htmlFor="Array">
                           <input
-                            {...register("operation_list_type", {
+                            {...register("operationListType", {
                               required: true,
                             })}
                             type="radio"
-                            name="operation_list_type"
+                            name="operationListType"
                             value="Array"
                             className="radio"
                           />
@@ -301,7 +300,7 @@ const AddService = () => {
                   <div>
                     <SelectField
                       data={verbData}
-                      name="verb_id"
+                      name="verbId"
                       control={control}
                       onChange={(e) => {
                         setVerb(e.label);
@@ -309,7 +308,7 @@ const AddService = () => {
                       }}
                     />
                     <h3 className="error-message">
-                      {errors?.verb_id && errors?.verb_id?.message}
+                      {errors?.verbId && errors?.verbId?.message}
                     </h3>
                   </div>
                 </div>
@@ -322,12 +321,12 @@ const AddService = () => {
                   <div>
                     <SelectField
                       data={returnTypeData}
-                      name="operation_return_type_id"
+                      name="operationReturnTypeId"
                       control={control}
                     />
                     <h3 className="error-message">
-                      {errors?.operation_return_type_id &&
-                        errors?.operation_return_type_id?.message}
+                      {errors?.operationReturnTypeId &&
+                        errors?.operationReturnTypeId?.message}
                     </h3>
                   </div>
                 </div>
@@ -339,13 +338,13 @@ const AddService = () => {
                   <div>
                     <SelectField
                       data={overRideData}
-                      name="override_id"
+                      name="overrideId"
                       control={control}
                       disabled={!overrideToggle}
                     />
                     <h3 className="error-message">
                       {!overrideToggle && "Please Select Verb First."}
-                      {errors?.override_id && errors?.override_id?.message}
+                      {errors?.overrideId && errors?.overrideId?.message}
                     </h3>
                   </div>
                 </div>
@@ -355,7 +354,7 @@ const AddService = () => {
                   <InputLabel className="label">Is Nullable</InputLabel>
                   <FormControl sx={{ m: 1 }} size="small">
                     <Controller
-                      name="is_operation_return_nullable"
+                      name="isOperationReturnNullable"
                       control={control}
                       render={({ field }) => <Checkbox {...field} />}
                     />
@@ -375,13 +374,12 @@ const AddService = () => {
                     <TextInput
                       type="text"
                       control={control}
-                      name="parameter_name"
+                      name="parameterName"
                       className="input"
                       placeholder="Enter Service Name"
                     />
                     <h3 className="error-message">
-                      {errors?.parameter_name &&
-                        errors?.parameter_name?.message}
+                      {errors?.parameterName && errors?.parameterName?.message}
                     </h3>
                   </div>
                 </div>
@@ -399,11 +397,11 @@ const AddService = () => {
                       <div className="radioWrapper">
                         <label htmlFor="Array">
                           <input
-                            {...register("parameter_list_type", {
+                            {...register("parameterListType", {
                               required: true,
                             })}
                             type="radio"
-                            name="parameter_list_type"
+                            name="parameterListType"
                             value="List"
                             className="radio"
                           />
@@ -413,11 +411,11 @@ const AddService = () => {
                       <div className="radioWrapper">
                         <label htmlFor="Array">
                           <input
-                            {...register("parameter_list_type", {
+                            {...register("parameterListType", {
                               required: true,
                             })}
                             type="radio"
-                            name="parameter_list_type"
+                            name="parameterListType"
                             value="Array"
                             className="radio"
                           />
@@ -436,12 +434,12 @@ const AddService = () => {
                   <div>
                     <SelectField
                       data={returnTypeData}
-                      name="parameter_type_id"
+                      name="parameterTypeId"
                       control={control}
                     />
                     <h3 className="error-message">
-                      {errors?.parameter_type_id &&
-                        errors?.parameter_type_id?.message}
+                      {errors?.parameterTypeId &&
+                        errors?.parameterTypeId?.message}
                     </h3>
                   </div>
                 </div>
@@ -452,7 +450,7 @@ const AddService = () => {
                     Is Nullable
                   </InputLabel>
                   <Controller
-                    name="is_parameter_type_nullable"
+                    name="isParameterTypeNullable"
                     control={control}
                     render={({ field }) => <Checkbox {...field} checked />}
                   />
@@ -465,7 +463,6 @@ const AddService = () => {
           <Button
             variant="outlined"
             color="success"
-            // onClick={notify}
             type="submit"
             disabled={!isValid}
           >

@@ -11,7 +11,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 
-const baseURL = "https://localhost:44386/api/nikita_Connection_Service";
+const baseURL = "https://localhost:44358/api/service/Get";
 export default function Lisiting() {
   const navigate = useNavigate();
   const [post, setPost] = React.useState(null);
@@ -44,21 +44,21 @@ export default function Lisiting() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {post.map((row) => (
+                {post?.map((row) => (
                   <TableRow
                     onClick={() => navigate(`/editService?${row?.id}`)}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row" key={row?.id}>
-                      {row.protocol_type_id === 1 ? "Soap" : "Rest"}
+                      {row.protocolTypeId === 1 ? "Soap" : "Rest"}
                     </TableCell>
-                    <TableCell align="right">{row.service_name}</TableCell>
-                    <TableCell align="right">{row.operation_name}</TableCell>
-                    <TableCell align="right">{row.parameter_name}</TableCell>
+                    <TableCell align="right">{row.serviceName}</TableCell>
+                    <TableCell align="right">{row.operationName}</TableCell>
+                    <TableCell align="right">{row.parameterName}</TableCell>
                     <TableCell align="right">
-                      {row.parameter_type_id === 1
+                      {row.parameterTypeId === 1
                         ? "int"
-                        : row.parameter_type_id === 2
+                        : row.parameterTypeId === 2
                         ? "String"
                         : "Boolean"}
                     </TableCell>
